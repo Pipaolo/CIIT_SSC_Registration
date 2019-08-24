@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'InputPage.dart';
 
@@ -8,7 +8,6 @@ class SectionPage extends StatefulWidget {
   final bool isGrade11;
 
   const SectionPage({Key key, this.isGrade11}) : super(key: key);@override
-
   _SectionPageState createState() => _SectionPageState(isGrade11);
 }
 
@@ -21,6 +20,7 @@ class _SectionPageState extends State<SectionPage> {
   Widget build(BuildContext context) {
     var sections = generateSectionList(isGrade11);
     return MaterialApp(
+      title: "Section Page",
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(icon: Icon(Theme.of(context).platform == TargetPlatform.iOS ? Icons.arrow_back_ios : Icons.arrow_back),
@@ -70,6 +70,7 @@ class _SectionPageState extends State<SectionPage> {
       ),
     );
   }
+
   List generateSectionList(isGrade11){
     var grade11Sections = ["Python", "Pattern", "Hue", "Symmetry", "Unity", "Vision"];
     var grade12Sections = ["Java", "Rhythm", "Harmony", "Balance", "Texture", "Maya", "Max"];

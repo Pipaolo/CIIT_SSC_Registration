@@ -21,6 +21,7 @@ class _IntroPageState extends State<IntroPage> {
     var grade12Color = Color.fromARGB(255, 235, 232, 65);
 
     return MaterialApp(
+      title: "Intro Page",
       home: Scaffold(
         appBar: AppBar(
           title: Text("Choose Section"),

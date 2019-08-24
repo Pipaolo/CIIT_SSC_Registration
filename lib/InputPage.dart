@@ -56,6 +56,7 @@ class InputPageState extends State<InputPage> {
     var deviceHeight = MediaQuery.of(context).size.height;
     var deviceWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
+      title: "Input Page",
       home: Scaffold(
         appBar: AppBar(
             leading: IconButton(
@@ -77,10 +78,10 @@ class InputPageState extends State<InputPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                        alignLabelWithHint: false,
-                        hintText: "Enter Full Name")
+                      controller: controller,
+                      decoration: InputDecoration(
+                          alignLabelWithHint: false,
+                          hintText: "Enter Full Name")
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
