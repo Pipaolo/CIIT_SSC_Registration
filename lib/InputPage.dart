@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/sheets/v4.dart' as sheet;
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:ssc_registration/IntroPage.dart';
+
+import 'LineDrawer.dart';
 
 class InputPage extends StatefulWidget {
   final String section;
@@ -20,6 +23,7 @@ class InputPageState extends State<InputPage> {
   //APP TO SHEETS REQUIREMENTS
   final String section;
   final bool isGrade11;
+  bool _validate = false;
 
   InputPageState(this.section, this.isGrade11);
 
@@ -39,6 +43,7 @@ class InputPageState extends State<InputPage> {
 
   //UI Stuff
   final controller = TextEditingController();
+  BuildContext scaffoldContext;
 
   @override
   void initState() {
@@ -58,58 +63,84 @@ class InputPageState extends State<InputPage> {
     return MaterialApp(
       title: "Input Page",
       home: Scaffold(
-        appBar: AppBar(
-            leading: IconButton(
-                icon: Icon(Theme.of(context).platform == TargetPlatform.iOS
-                    ? Icons.arrow_back_ios
-                    : Icons.arrow_back),
-                onPressed: () => Navigator.pop(context)),
-            title: Text("Enter Details"),
-            centerTitle: true),
-        body: Container(
-          height: deviceHeight,
-          width: deviceWidth,
-          alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                          alignLabelWithHint: false,
-                          hintText: "Enter Full Name")
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Expanded(
-                        child: RaisedButton(
-                          elevation: 0,
-                          child: Text(
-                            "Submit",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          color: Colors.blueAccent,
-                          onPressed: () {
-                            getCredentials(
-                                controller.text, section, "temp", isGrade11);
-                          },
+          backgroundColor: Color.fromARGB(255, 2, 51, 76),
+          appBar: AppBar(
+              leading: IconButton(
+                  icon: Icon(Theme
+                      .of(context)
+                      .platform == TargetPlatform.iOS
+                      ? Icons.arrow_back_ios
+                      : Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context)),
+              title: Text("Enter Details"),
+              centerTitle: true),
+          body: Builder(builder: (BuildContext context) {
+            scaffoldContext = context;
+            return CustomPaint(
+              painter: LineDrawer(),
+              child: Container(
+                height: deviceHeight / 1.2,
+                width: deviceWidth,
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        TextField(
+                            style: TextStyle(color: Colors.black),
+                            cursorColor: Colors.black,
+                            controller: controller,
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white.withAlpha(230),
+                                focusColor: Colors.amber,
+                                labelText: "Name",
+                                alignLabelWithHint: false,
+                                errorText:
+                                _validate ? "Please Enter a Name" : null,
+                                hintStyle: TextStyle(color: Colors.black),
+                                hintText: "Enter Full Name")),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(
+                              child: RaisedButton(
+                                elevation: 0,
+                                child: Text(
+                                  "Submit",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                color: Colors.amber.withAlpha(255),
+                                onPressed: () {
+                                  scaffoldContext = context;
+                                  if (controller.text.isNotEmpty) {
+                                    getCredentials(controller.text, section,
+                                        "temp", isGrade11);
+                                  } else {
+                                    setState(() {
+                                      controller.text.isEmpty
+                                          ? _validate = true
+                                          : _validate = false;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-      ),
+            );
+          })),
     );
   }
 
@@ -143,6 +174,15 @@ class InputPageState extends State<InputPage> {
                       .update(vr, spreadsheetId, range,
                           valueInputOption: "USER_ENTERED")
                       .then((sheet.UpdateValuesResponse r) {
+                    Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                      content: Text(
+                        "Time Out Success!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      backgroundColor: Colors.white,
+                    ));
+                    runApp(IntroPage());
                   });
                   isMatched = !isMatched;
                 }
@@ -157,7 +197,15 @@ class InputPageState extends State<InputPage> {
                     .append(vr, spreadsheetId, "$section!A:D",
                         valueInputOption: "USER_ENTERED")
                     .then((sheet.AppendValuesResponse r) {
-                  print("Registered Successfully!");
+                  Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                    content: Text(
+                      "Welcome $name!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    backgroundColor: Colors.white,
+                  ));
+                  runApp(IntroPage());
                 });
               }
             });
