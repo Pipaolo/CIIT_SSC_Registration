@@ -1,8 +1,9 @@
 import 'dart:ui';
-import 'package:googleapis/sheets/v4.dart' as sheet;
-import 'package:googleapis_auth/auth_io.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/sheets/v4.dart' as sheet;
+import 'package:googleapis_auth/auth_io.dart';
 
 class InputPage extends StatefulWidget {
   final String section;
@@ -15,7 +16,7 @@ class InputPage extends StatefulWidget {
   State createState() => InputPageState(section, isGrade11);
 }
 
-class InputPageState extends State<InputPage> with WidgetsBindingObserver {
+class InputPageState extends State<InputPage> {
   //APP TO SHEETS REQUIREMENTS
   final String section;
   final bool isGrade11;
@@ -38,41 +39,16 @@ class InputPageState extends State<InputPage> with WidgetsBindingObserver {
 
   //UI Stuff
   final controller = TextEditingController();
-  double _overlap = 0;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     super.dispose();
     controller.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  @override
-  void didChangeMetrics() {
-    final renderObject = context.findRenderObject();
-    final renderBox = renderObject as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-    final widgetRect = Rect.fromLTWH(
-      offset.dx,
-      offset.dy,
-      renderBox.size.width,
-      renderBox.size.height,
-    );
-    final keyboardTopPixels =
-        window.physicalSize.height - window.viewInsets.bottom;
-    final keyboardTopPoints = keyboardTopPixels / window.devicePixelRatio;
-    final overlap = widgetRect.bottom - keyboardTopPoints;
-    if (overlap >= 0) {
-      setState(() {
-        _overlap = overlap;
-      });
-    }
   }
 
   @override
