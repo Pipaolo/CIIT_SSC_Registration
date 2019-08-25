@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:googleapis/sheets/v4.dart' as sheet;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:ssc_registration/IntroPage.dart';
@@ -19,7 +20,7 @@ class InputPage extends StatefulWidget {
   State createState() => InputPageState(section, isGrade11);
 }
 
-class InputPageState extends State<InputPage> {
+class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   //APP TO SHEETS REQUIREMENTS
   final String section;
   final bool isGrade11;
@@ -43,7 +44,10 @@ class InputPageState extends State<InputPage> {
 
   //UI Stuff
   final controller = TextEditingController();
+  bool isLoading = false;
+  var animationController;
   BuildContext scaffoldContext;
+
 
   @override
   void initState() {
@@ -58,6 +62,8 @@ class InputPageState extends State<InputPage> {
 
   @override
   Widget build(BuildContext context) {
+    animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
     var deviceHeight = MediaQuery.of(context).size.height;
     var deviceWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
@@ -107,30 +113,7 @@ class InputPageState extends State<InputPage> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Expanded(
-                              child: RaisedButton(
-                                elevation: 0,
-                                child: Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.black),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                color: Colors.amber.withAlpha(255),
-                                onPressed: () {
-                                  scaffoldContext = context;
-                                  if (controller.text.isNotEmpty) {
-                                    getCredentials(controller.text, section,
-                                        "temp", isGrade11);
-                                  } else {
-                                    setState(() {
-                                      controller.text.isEmpty
-                                          ? _validate = true
-                                          : _validate = false;
-                                    });
-                                  }
-                                },
-                              ),
+                              child: loadingIcon(),
                             ),
                           ],
                         ),
@@ -182,7 +165,11 @@ class InputPageState extends State<InputPage> {
                       ),
                       backgroundColor: Colors.white,
                     ));
-                    runApp(IntroPage());
+                    setState(() {
+                      isLoading = !isLoading;
+                      animationController.dispose();
+                      runApp(IntroPage());
+                    });
                   });
                   isMatched = !isMatched;
                 }
@@ -205,7 +192,11 @@ class InputPageState extends State<InputPage> {
                     ),
                     backgroundColor: Colors.white,
                   ));
-                  runApp(IntroPage());
+                  setState(() {
+                    isLoading = !isLoading;
+                    animationController.dispose();
+                    runApp(IntroPage());
+                  });
                 });
               }
             });
@@ -213,6 +204,40 @@ class InputPageState extends State<InputPage> {
         }
       });
     });
+  }
+
+  Widget loadingIcon() {
+    var submitButton = RaisedButton(
+      elevation: 0,
+      child: Text(
+        "Submit",
+        style: TextStyle(
+            fontSize: 20, color: Colors.black),
+      ),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8)),
+      color: Colors.amber.withAlpha(255),
+      onPressed: () {
+        if (controller.text.isNotEmpty) {
+          isLoading = !isLoading;
+          setState(() {});
+          getCredentials(controller.text, section,
+              "temp", isGrade11);
+        } else {
+          setState(() {
+            controller.text.isEmpty
+                ? _validate = true
+                : _validate = false;
+          });
+        }
+      },
+    );
+
+    var loading = SpinKitCircle(
+        color: Colors.white,
+        controller: animationController);
+
+    return (isLoading) ? loading : submitButton;
   }
 
   String getTime() {
