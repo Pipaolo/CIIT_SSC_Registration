@@ -144,7 +144,6 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
       api.spreadsheets.values
           .get(groupingSpreadsheetId, "Sheet1!A:S")
           .then((result) {
-        print(result);
         int rowNumber = 0;
         bool isNameFound = false;
         for (var row in result.values) {
