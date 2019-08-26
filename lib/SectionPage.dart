@@ -3,24 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:ssc_registration/LineDrawer.dart';
 
+import 'GroupPage.dart';
 import 'InputPage.dart';
+import 'IntroPage.dart';
+import 'StudentModel.dart';
 
 class SectionPage extends StatefulWidget {
-  final bool isGrade11;
+  static const routeName = "/SectionPage";
 
-  const SectionPage({Key key, this.isGrade11}) : super(key: key);@override
-  _SectionPageState createState() => _SectionPageState(isGrade11);
+  _SectionPageState createState() => _SectionPageState();
 }
 
 class _SectionPageState extends State<SectionPage> {
-  final bool isGrade11;
-  _SectionPageState(this.isGrade11);
-
-
   @override
   Widget build(BuildContext context) {
-    var sections = generateSectionList(isGrade11);
+    final Student _student = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
+    var sections = generateSectionList(_student.isGrade11);
     return MaterialApp(
+      routes: {
+        '/IntroPage': (context) => IntroPage(),
+        '/SectionPage': (context) => SectionPage(),
+        '/InputPage': (context) => InputPage(),
+        '/GroupPage': (context) => GroupPage()
+      },
       theme: ThemeData(fontFamily: 'Gotham'),
       title: "Section Page",
       home: Scaffold(
@@ -53,10 +61,11 @@ class _SectionPageState extends State<SectionPage> {
                           child: InkWell(
                             splashColor: Colors.white,
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) =>
-                                      InputPage(section: sections[position],
-                                          isGrade11: isGrade11)));
+                              Navigator.pushNamed(context, InputPage.routeName,
+                                  arguments: Student(
+                                      sections[position], "",
+                                      _student.isGrade11
+                                  ));
                             },
                             child: Center(
                                 child: FittedBox(

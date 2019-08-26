@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssc_registration/LineDrawer.dart';
+import 'package:ssc_registration/StudentModel.dart';
 
+import 'GroupPage.dart';
+import 'InputPage.dart';
 import 'SectionPage.dart';
 
 class IntroPage extends StatefulWidget {
-  IntroPage({Key key}) : super(key: key);
+  static const routeName = "/IntroPage";
 
   @override
   _IntroPageState createState() => _IntroPageState();
@@ -17,6 +20,12 @@ class _IntroPageState extends State<IntroPage> {
     var sections = ["Grade \n11", "Grade \n12"];
 
     return MaterialApp(
+      routes: {
+        '/IntroPage': (context) => IntroPage(),
+        '/SectionPage': (context) => SectionPage(),
+        '/InputPage': (context) => InputPage(),
+        '/GroupPage': (context) => GroupPage()
+      },
       theme: ThemeData(fontFamily: 'Gotham'),
       title: "Intro Page",
       home: Scaffold(
@@ -47,11 +56,13 @@ class _IntroPageState extends State<IntroPage> {
                             child: InkWell(
                               splashColor: Colors.white,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        SectionPage(
-                                            isGrade11: (sections[position] ==
-                                                "Grade \n11") ? true : false)));
+                                Navigator.pushNamed(
+                                    context, SectionPage.routeName,
+                                    arguments: Student(
+                                        "", "",
+                                        (sections[position] == "Grade \n11")
+                                            ? true
+                                            : false));
                               },
                               child: Center(
                                   child: FittedBox(
@@ -59,7 +70,8 @@ class _IntroPageState extends State<IntroPage> {
                                     child: Text(
                                       sections[position],
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 80,
+                                      style: TextStyle(
+                                          fontSize: 80,
                                           color: Colors.white.withAlpha(200)),
                                     ),
                                   )),

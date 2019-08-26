@@ -5,28 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:googleapis/sheets/v4.dart' as sheet;
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:ssc_registration/IntroPage.dart';
+import 'package:ssc_registration/GroupPage.dart';
 
+import 'IntroPage.dart';
 import 'LineDrawer.dart';
+import 'SectionPage.dart';
+import 'StudentModel.dart';
 
 class InputPage extends StatefulWidget {
-  final String section;
-  final bool isGrade11;
-
-  InputPage({Key key, @required this.section, @required this.isGrade11})
-      : super(key: key);
-
+  static const routeName = "/InputPage";
   @override
-  State createState() => InputPageState(section, isGrade11);
+  State createState() => InputPageState();
 }
 
 class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   //APP TO SHEETS REQUIREMENTS
-  final String section;
-  final bool isGrade11;
   bool _validate = false;
-
-  InputPageState(this.section, this.isGrade11);
 
   final accountCredentials = new ServiceAccountCredentials.fromJson({
     "type": "service_account",
@@ -41,13 +35,13 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
 
   final grade11SpreadSheetId = "1YS8ry3wiS-KH7NRZHAVdx9rE4Q4ONB8RFzZNDgQXj4g";
   final grade12SpreadsheetId = "1PvkWgV194xbNx-gn1q0_9P1m-MLINazn7ARuCwhI6VA";
+  final groupingSpreadsheetId = "1E0B3YRZTezd8wrr8AGU7zBR4-FnbsTzm2SFuMQBkvog";
 
   //UI Stuff
   final controller = TextEditingController();
   bool isLoading = false;
   var animationController;
   BuildContext scaffoldContext;
-
 
   @override
   void initState() {
@@ -62,11 +56,21 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final Student _student = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
     animationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
     var deviceHeight = MediaQuery.of(context).size.height;
     var deviceWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
+      routes: {
+        '/IntroPage': (context) => IntroPage(),
+        '/SectionPage': (context) => SectionPage(),
+        '/InputPage': (context) => InputPage(),
+        '/GroupPage': (context) => GroupPage()
+      },
       title: "Input Page",
       home: Scaffold(
           backgroundColor: Color.fromARGB(255, 2, 51, 76),
@@ -113,7 +117,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Expanded(
-                              child: loadingIcon(),
+                              child: loadingIcon(
+                                  _student.section, _student.isGrade11),
                             ),
                           ],
                         ),
@@ -127,12 +132,45 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
     );
   }
 
-  void getCredentials(
-      String name, String section, String group, bool isGrade11) {
+  void getCredentials(String name, String section, bool isGrade11) {
     var spreadsheetId = isGrade11 ? grade11SpreadSheetId : grade12SpreadsheetId;
+    var studentGroup;
+    bool isMatched = false;
 
     clientViaServiceAccount(accountCredentials, scopes).then((client) {
       sheet.SheetsApi api = new sheet.SheetsApi(client);
+
+      //Get groupings
+      api.spreadsheets.values
+          .get(groupingSpreadsheetId, "Sheet1!A:S")
+          .then((result) {
+        print(result);
+        int rowNumber = 0;
+        bool isNameFound = false;
+        for (var row in result.values) {
+          rowNumber++;
+          int colNumber = 0;
+          if (!isNameFound) {
+            for (var rowItems in row) {
+              colNumber++;
+              var tempNameList = name.split(" ");
+              var lastName = tempNameList[tempNameList.length - 1];
+              if (rowItems.toString().contains(lastName)) {
+                isNameFound = !isNameFound;
+                if (rowNumber > 12) {
+                  studentGroup = "Table ${colNumber + 19}";
+                } else {
+                  studentGroup = "Table $colNumber";
+                }
+                break;
+              }
+            }
+          } else {
+            break;
+          }
+        }
+      });
+
       api.spreadsheets.get(spreadsheetId).then((result) {
         for (var sheets in result.sheets) {
           if (sheets.properties.title == section) {
@@ -140,7 +178,6 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
             api.spreadsheets.values
                 .get(spreadsheetId, "$section")
                 .then((result) {
-              bool isMatched = false;
               int i = 0;
               var row = result;
               for (var item in row.values) {
@@ -148,7 +185,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                 if (item[0] == name) {
                   var vr = sheet.ValueRange.fromJson({
                     "values": [
-                      [name, "Temp Group", "${item[2]}", "${getTime()}"]
+                      [name, studentGroup, "${item[2]}", "${getTime()}"]
                     ]
                   });
                   print("Found a match!");
@@ -167,17 +204,18 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                     ));
                     setState(() {
                       isLoading = !isLoading;
-                      animationController.dispose();
-                      runApp(IntroPage());
                     });
                   });
                   isMatched = !isMatched;
+                  Navigator.pushNamed(
+                      context, GroupPage.routeName, arguments: Student(
+                      "", "", false));
                 }
               }
               if (!isMatched) {
                 var vr = sheet.ValueRange.fromJson({
                   "values": [
-                    [name, "Temp Group", "${getTime()}"]
+                    [name, studentGroup, "${getTime()}"]
                   ]
                 });
                 api.spreadsheets.values
@@ -194,9 +232,10 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   ));
                   setState(() {
                     isLoading = !isLoading;
-                    animationController.dispose();
-                    runApp(IntroPage());
                   });
+                  Navigator.pushNamed(
+                      context, GroupPage.routeName, arguments: Student(
+                      "", studentGroup, false));
                 });
               }
             });
@@ -204,38 +243,33 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
         }
       });
     });
+    animationController.dispose();
   }
 
-  Widget loadingIcon() {
+  Widget loadingIcon(String section, bool isGrade11) {
     var submitButton = RaisedButton(
       elevation: 0,
       child: Text(
         "Submit",
-        style: TextStyle(
-            fontSize: 20, color: Colors.black),
+        style: TextStyle(fontSize: 20, color: Colors.black),
       ),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       color: Colors.amber.withAlpha(255),
       onPressed: () {
         if (controller.text.isNotEmpty) {
           isLoading = !isLoading;
           setState(() {});
-          getCredentials(controller.text, section,
-              "temp", isGrade11);
+          getCredentials(controller.text, section, isGrade11);
         } else {
           setState(() {
-            controller.text.isEmpty
-                ? _validate = true
-                : _validate = false;
+            controller.text.isEmpty ? _validate = true : _validate = false;
           });
         }
       },
     );
 
-    var loading = SpinKitCircle(
-        color: Colors.white,
-        controller: animationController);
+    var loading =
+    SpinKitCircle(color: Colors.white, controller: animationController);
 
     return (isLoading) ? loading : submitButton;
   }

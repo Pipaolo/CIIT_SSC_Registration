@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LineDrawer extends CustomPainter {
-  Paint _paint;
-
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
