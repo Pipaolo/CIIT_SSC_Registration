@@ -155,7 +155,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               var tempNameList = name.split(" ");
               var firstName = tempNameList[0];
               var lastName = tempNameList[tempNameList.length - 1];
-              if (rowItems.toString().contains(lastName) && rowItems.toString().contains(firstName) {
+              if (rowItems.toString().contains(lastName) && rowItems.toString().contains(firstName)) {
                 isNameFound = !isNameFound;
                 if (rowNumber > 12) {
                   studentGroup = "Table ${colNumber + 19}";
