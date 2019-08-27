@@ -71,8 +71,7 @@ class _IntroPageState extends State<IntroPage> {
                                     sections[position],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 40,
-                                        color: Colors.white),
+                                        fontSize: 40),
                                   ),
                                 ),
                               ),
