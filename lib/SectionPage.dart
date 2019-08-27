@@ -47,7 +47,7 @@ class _SectionPageState extends State<SectionPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Expanded(
+                Flexible(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
@@ -74,7 +74,7 @@ class _SectionPageState extends State<SectionPage> {
                                   child: Text(
                                     sections[position],
                                     style: TextStyle(
-                                        fontSize: 40,
+                                        fontSize: 80,
                                         color: Colors.white),
                                   ),
                                 )),

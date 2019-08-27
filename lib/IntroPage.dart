@@ -4,6 +4,7 @@ import 'package:ssc_registration/StudentModel.dart';
 
 import 'GroupPage.dart';
 import 'InputPage.dart';
+import 'LineDrawer.dart';
 import 'SectionPage.dart';
 
 class IntroPage extends StatefulWidget {
@@ -34,13 +35,15 @@ class _IntroPageState extends State<IntroPage> {
           title: Text("Grade Level"),
           centerTitle: true,
         ),
-        body: Container(
+        body: CustomPaint(
+          painter: LineDrawer(),
+          child: Container(
             padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Expanded(
+                  Flexible(
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2),
@@ -68,7 +71,7 @@ class _IntroPageState extends State<IntroPage> {
                                     sections[position],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 40,
+                                        fontSize: 80,
                                         color: Colors.white.withAlpha(200)),
                                   ),
                                 ),
@@ -83,6 +86,7 @@ class _IntroPageState extends State<IntroPage> {
                   )
                 ]),
           ),
+        ),
       ),
     );
   }
