@@ -65,16 +65,20 @@ class _IntroPageState extends State<IntroPage> {
                                             : false));
                               },
                               child: Center(
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(
-                                      sections[position],
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 80,
-                                          color: Colors.white.withAlpha(200)),
-                                    ),
-                                  )),
+                                child: FittedBox(
+                                  fit: (Theme
+                                      .of(context)
+                                      .platform == TargetPlatform.iOS) ? BoxFit
+                                      .contain : BoxFit.contain,
+                                  child: Text(
+                                    sections[position],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 40,
+                                        color: Colors.white.withAlpha(200)),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         );
