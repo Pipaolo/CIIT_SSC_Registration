@@ -14,6 +14,7 @@ import 'StudentModel.dart';
 
 class InputPage extends StatefulWidget {
   static const routeName = "/InputPage";
+
   @override
   State createState() => InputPageState();
 }
@@ -40,6 +41,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   //UI Stuff
   final controller = TextEditingController();
   bool isLoading = false;
+  bool isMatched = false;
+  bool isNameFound = false;
   var animationController;
   BuildContext scaffoldContext;
 
@@ -132,20 +135,18 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
     );
   }
 
-  void getCredentials(String name, String section, bool isGrade11) {
+  void getStudentInfo(String name, String section, bool isGrade11) {
     var spreadsheetId = isGrade11 ? grade11SpreadSheetId : grade12SpreadsheetId;
     var studentGroup;
-    bool isMatched = false;
 
     clientViaServiceAccount(accountCredentials, scopes).then((client) {
       sheet.SheetsApi api = new sheet.SheetsApi(client);
-
       //Get groupings
       api.spreadsheets.values
           .get(groupingSpreadsheetId, "Sheet1!A:S")
           .then((result) {
         int rowNumber = 0;
-        bool isNameFound = false;
+
         for (var row in result.values) {
           rowNumber++;
           int colNumber = 0;
@@ -155,13 +156,18 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               var tempNameList = name.split(" ");
               var firstName = tempNameList[0];
               var lastName = tempNameList[tempNameList.length - 1];
-              if (rowItems.toString().contains(lastName) && rowItems.toString().contains(firstName)) {
-                isNameFound = !isNameFound;
+              if (rowItems.toString().contains(lastName) &&
+                  rowItems.toString().contains(firstName)) {
                 if (rowNumber > 12) {
+                  print("$name Table ${colNumber + 19}");
                   studentGroup = "Table ${colNumber + 19}";
                 } else {
+                  print("$name Table $colNumber");
                   studentGroup = "Table $colNumber";
                 }
+                isNameFound = !isNameFound;
+                addUpdateStudentInfo(
+                    spreadsheetId, name, section, studentGroup, api);
                 break;
               }
             }
@@ -169,9 +175,29 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
             break;
           }
         }
+        if (studentGroup == null) {
+          Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+            content: Text(
+              "Name not Found!",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red),
+            ),
+            backgroundColor: Colors.black,
+          ));
+          setState(() {
+            isLoading = !isLoading;
+          });
+        }
       });
+    });
+  }
 
+  void addUpdateStudentInfo(String spreadsheetId, String name, String section,
+      String studentGroup, sheet.SheetsApi api) {
+    if (studentGroup != null) {
+      print("Getting Spreadsheet");
       api.spreadsheets.get(spreadsheetId).then((result) {
+        print("Spreadsheet Get Successful!");
         for (var sheets in result.sheets) {
           if (sheets.properties.title == section) {
             String range;
@@ -192,7 +218,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   range = "$section!A$i:D$i";
                   api.spreadsheets.values
                       .update(vr, spreadsheetId, range,
-                          valueInputOption: "USER_ENTERED")
+                      valueInputOption: "USER_ENTERED")
                       .then((sheet.UpdateValuesResponse r) {
                     Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
                       content: Text(
@@ -205,11 +231,11 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                     setState(() {
                       isLoading = !isLoading;
                     });
+                    print("Time out Success!");
                   });
                   isMatched = !isMatched;
-                  Navigator.pushNamed(
-                      context, GroupPage.routeName, arguments: Student(
-                      "", "", false));
+                  Navigator.pushNamed(context, GroupPage.routeName,
+                      arguments: Student("", "", false));
                 }
               }
               if (!isMatched) {
@@ -220,7 +246,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                 });
                 api.spreadsheets.values
                     .append(vr, spreadsheetId, "$section!A:D",
-                        valueInputOption: "USER_ENTERED")
+                    valueInputOption: "USER_ENTERED")
                     .then((sheet.AppendValuesResponse r) {
                   Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
                     content: Text(
@@ -233,16 +259,16 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   setState(() {
                     isLoading = !isLoading;
                   });
-                  Navigator.pushNamed(
-                      context, GroupPage.routeName, arguments: Student(
-                      "", studentGroup, false));
+                  print("Time In Success!");
+                  Navigator.pushNamed(context, GroupPage.routeName,
+                      arguments: Student("", studentGroup, false));
                 });
               }
             });
           }
         }
       });
-    });
+    }
     animationController.dispose();
   }
 
@@ -259,7 +285,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
         if (controller.text.isNotEmpty) {
           isLoading = !isLoading;
           setState(() {});
-          getCredentials(controller.text, section, isGrade11);
+          getStudentInfo(controller.text, section, isGrade11);
         } else {
           setState(() {
             controller.text.isEmpty ? _validate = true : _validate = false;
