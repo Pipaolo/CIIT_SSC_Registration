@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ssc_registration/LineDrawer.dart';
 import 'package:ssc_registration/StudentModel.dart';
 
 import 'GroupPage.dart';
@@ -35,9 +34,7 @@ class _IntroPageState extends State<IntroPage> {
           title: Text("Grade Level"),
           centerTitle: true,
         ),
-        body: CustomPaint(
-          painter: LineDrawer(),
-          child: Container(
+        body: Container(
             padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +68,8 @@ class _IntroPageState extends State<IntroPage> {
                                     sections[position],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 40),
+                                        fontSize: 40,
+                                        color: Colors.white.withAlpha(200)),
                                   ),
                                 ),
                               ),
@@ -85,7 +83,6 @@ class _IntroPageState extends State<IntroPage> {
                   )
                 ]),
           ),
-        ),
       ),
     );
   }
