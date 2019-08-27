@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'IntroPage.dart';
 
-Future main() {
+void main() {
   runApp(IntroPage());
 }
 
