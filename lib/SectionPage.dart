@@ -69,10 +69,7 @@ class _SectionPageState extends State<SectionPage> {
                             },
                             child: Center(
                                 child: FittedBox(
-                                  fit: (Theme
-                                      .of(context)
-                                      .platform == TargetPlatform.iOS) ? BoxFit
-                                      .contain : BoxFit.contain,
+                                  fit: BoxFit.contain,
                                   child: Text(
                                     sections[position],
                                     style: TextStyle(

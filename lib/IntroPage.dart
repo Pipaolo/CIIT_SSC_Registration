@@ -66,10 +66,7 @@ class _IntroPageState extends State<IntroPage> {
                               },
                               child: Center(
                                 child: FittedBox(
-                                  fit: (Theme
-                                      .of(context)
-                                      .platform == TargetPlatform.iOS) ? BoxFit
-                                      .contain : BoxFit.contain,
+                                  fit: BoxFit.contain,
                                   child: Text(
                                     sections[position],
                                     textAlign: TextAlign.center,
