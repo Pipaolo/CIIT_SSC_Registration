@@ -74,7 +74,7 @@ class _SectionPageState extends State<SectionPage> {
                                     sections[position],
                                     style: TextStyle(
                                         fontSize: 40,
-                                        color: Colors.white.withAlpha(200)),
+                                        color: Colors.white),
                                   ),
                                 )),
                           ),

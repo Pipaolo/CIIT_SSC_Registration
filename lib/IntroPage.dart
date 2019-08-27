@@ -72,7 +72,7 @@ class _IntroPageState extends State<IntroPage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 40,
-                                        color: Colors.white.withAlpha(200)),
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
