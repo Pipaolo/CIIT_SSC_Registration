@@ -10,11 +10,12 @@ import 'StudentModel.dart';
 
 class SectionPage extends StatefulWidget {
   static const routeName = "/SectionPage";
-
   _SectionPageState createState() => _SectionPageState();
 }
 
 class _SectionPageState extends State<SectionPage> {
+
+
   @override
   Widget build(BuildContext context) {
     final Student _student = ModalRoute
