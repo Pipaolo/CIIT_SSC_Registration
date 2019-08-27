@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
     "project_id": "ciitregistration",
     "private_key_id": "9047f81983bbd27a9582807db3e21ec9da81d3c3",
     "private_key":
-        "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCkfD0BRkG5LpdK\nsHKAKJBxOItI5PlNKxWOyEUFccSiinQc1nKrSuM/TOdQfNvd7MAlkjaJ/0Y16dPv\n4t4K2py8tMM7vU7yBHH5ckLJ6AxpWdvLI3JS/1J3+8D72ZIFfoqj0bXgTNrqK6Fo\nS+2fQ14P8HGrCmEA24SctI9FUZ3qmKlVatksFvVOkmKPwCPaBYhGVYjeVhIfaKyl\nQnoKY4LvrQNB1KSiQQGkRF98SkP2R8yyYcYS4cZyT77yLhA4OR1orTc8XmIdhxBw\ncrg8JWddkfvEG6LEcXKDMPHyNF4nq51tLzWA+fdztytf2PVoRt3bEdiYFm0u4atR\nbUuZSTdpAgMBAAECggEACG2NOql86J4ohl0wILzzWbnJ+TwyQe/5NM2yK6s+pg1u\nEaQzT++QYUfxekBLi717wvEQ9lUsJcsLXvlC4098RHcGoeL7To9Hv75JCctoB2Xh\nSzFPxEzsztUJeF4Xi0yGkgpGxW1qsiD2Lj/ltwleonZxfJAVlFOrIdRmmuiprMF8\nmekJFpti8D+g/9/0pSVY4UO55w70mihdKuLk/d4PEXa9sbWlsk+kHIdlGlAZWI7N\nNVwrJvtd6xAcLzxgsmKQ/Xj1/V/su8cx1vrH9XMyT0fqWOxOeSdRuwyUWO3gkJUK\n0urrpcSwiXSscUT4ur/qMCmKAPOPYNUh6zRKxLDI2QKBgQDij/nsGk8tfs654Taf\nOvc5Eo1cTb7ZSDpgTBnfFbg7q67d5Irkdy3jyn1nWSApVPMHS8ib65VcplGm88Zj\nFhTZHKVeOaBmocvFbLaRVH9o7zk8W6F4tklFH2C6noEAUVk+1Ihx+T+Jf0gVeOyD\nhm8E92qMWp090D6aS8ifm3l9fwKBgQC522y7siT5splUQBMpDedGT/FnqfzyUFJ8\nSBO52XLx6va9MR8allAStRG1YITZx5cdNk/wbnaUTb5q/P1onYwlzLhzcGA0ObeC\np0ovHuhWXu4Lu4ZBbLSJTWBZD4dXPvKClSn/tDlqSM+bn8OVH9ma+tmZz5MUgTWI\n1tGAKDuPFwKBgQCbIU5VVeZlFnDiYc0O1kc1MvjL/Qfyqzwdd743PB377aA8myJn\nMRug36NiQmp9IoeNtVxVNsf8un0qPbzXV+VKjAzHKdokrCBku/1+IUdkSHj+VReJ\nGfetdsC6x5E48HqVRN1wfOP+d8KZwUThAgm+ctLn65vDGXXkHIPwlXpobQKBgQCw\n8aCxicb+GvUzatVTDrOTE2UnZoU1RRdiz1RIaieu/h3uvSd5roWJae30GnIgzI6n\n9x9gLiqiwul4/mdcBDJ7gk5RSTmuPwzhTNepyOk14acMcHo/K3kuBwalg808WOeV\nPuH/WdwXvj45UX9pKCuKCyzD7QWATgtjvfEy7BrX/QKBgQDeRteP4bgrHzH6L+3d\n/gqSlBgL6qN3oLS9AHFWR/f+p18UbpPMcN9OzQmttatHFoWxLi4jR6k3/limh0LD\nGWBbBE0KIb+W46P8e+Gj6Wn4im3xULI0BlmkaXMU+yrQ9F5PwCgXmpfcQGM4Cg3P\nMx104QGnKiZvoV1jzli42QFC0Q==\n-----END PRIVATE KEY-----\n",
+    "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCkfD0BRkG5LpdK\nsHKAKJBxOItI5PlNKxWOyEUFccSiinQc1nKrSuM/TOdQfNvd7MAlkjaJ/0Y16dPv\n4t4K2py8tMM7vU7yBHH5ckLJ6AxpWdvLI3JS/1J3+8D72ZIFfoqj0bXgTNrqK6Fo\nS+2fQ14P8HGrCmEA24SctI9FUZ3qmKlVatksFvVOkmKPwCPaBYhGVYjeVhIfaKyl\nQnoKY4LvrQNB1KSiQQGkRF98SkP2R8yyYcYS4cZyT77yLhA4OR1orTc8XmIdhxBw\ncrg8JWddkfvEG6LEcXKDMPHyNF4nq51tLzWA+fdztytf2PVoRt3bEdiYFm0u4atR\nbUuZSTdpAgMBAAECggEACG2NOql86J4ohl0wILzzWbnJ+TwyQe/5NM2yK6s+pg1u\nEaQzT++QYUfxekBLi717wvEQ9lUsJcsLXvlC4098RHcGoeL7To9Hv75JCctoB2Xh\nSzFPxEzsztUJeF4Xi0yGkgpGxW1qsiD2Lj/ltwleonZxfJAVlFOrIdRmmuiprMF8\nmekJFpti8D+g/9/0pSVY4UO55w70mihdKuLk/d4PEXa9sbWlsk+kHIdlGlAZWI7N\nNVwrJvtd6xAcLzxgsmKQ/Xj1/V/su8cx1vrH9XMyT0fqWOxOeSdRuwyUWO3gkJUK\n0urrpcSwiXSscUT4ur/qMCmKAPOPYNUh6zRKxLDI2QKBgQDij/nsGk8tfs654Taf\nOvc5Eo1cTb7ZSDpgTBnfFbg7q67d5Irkdy3jyn1nWSApVPMHS8ib65VcplGm88Zj\nFhTZHKVeOaBmocvFbLaRVH9o7zk8W6F4tklFH2C6noEAUVk+1Ihx+T+Jf0gVeOyD\nhm8E92qMWp090D6aS8ifm3l9fwKBgQC522y7siT5splUQBMpDedGT/FnqfzyUFJ8\nSBO52XLx6va9MR8allAStRG1YITZx5cdNk/wbnaUTb5q/P1onYwlzLhzcGA0ObeC\np0ovHuhWXu4Lu4ZBbLSJTWBZD4dXPvKClSn/tDlqSM+bn8OVH9ma+tmZz5MUgTWI\n1tGAKDuPFwKBgQCbIU5VVeZlFnDiYc0O1kc1MvjL/Qfyqzwdd743PB377aA8myJn\nMRug36NiQmp9IoeNtVxVNsf8un0qPbzXV+VKjAzHKdokrCBku/1+IUdkSHj+VReJ\nGfetdsC6x5E48HqVRN1wfOP+d8KZwUThAgm+ctLn65vDGXXkHIPwlXpobQKBgQCw\n8aCxicb+GvUzatVTDrOTE2UnZoU1RRdiz1RIaieu/h3uvSd5roWJae30GnIgzI6n\n9x9gLiqiwul4/mdcBDJ7gk5RSTmuPwzhTNepyOk14acMcHo/K3kuBwalg808WOeV\nPuH/WdwXvj45UX9pKCuKCyzD7QWATgtjvfEy7BrX/QKBgQDeRteP4bgrHzH6L+3d\n/gqSlBgL6qN3oLS9AHFWR/f+p18UbpPMcN9OzQmttatHFoWxLi4jR6k3/limh0LD\nGWBbBE0KIb+W46P8e+Gj6Wn4im3xULI0BlmkaXMU+yrQ9F5PwCgXmpfcQGM4Cg3P\nMx104QGnKiZvoV1jzli42QFC0Q==\n-----END PRIVATE KEY-----\n",
     "client_email": "paolo-toletnino@ciitregistration.iam.gserviceaccount.com",
     "client_id": "109507260530307396305",
   });
@@ -43,6 +44,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   bool isLoading = false;
   bool isMatched = false;
   bool isNameFound = false;
+  bool isCorrectSection = false;
   var animationController;
   BuildContext scaffoldContext;
 
@@ -154,10 +156,33 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
             for (var rowItems in row) {
               colNumber++;
               var tempNameList = name.split(" ");
+              var tempStudentSection = rowItems.toString().split(" ");
+              var studentSection = tempStudentSection[tempStudentSection
+                  .length - 1];
               var firstName = tempNameList[0];
               var lastName = tempNameList[tempNameList.length - 1];
               if (rowItems.toString().contains(lastName) &&
                   rowItems.toString().contains(firstName)) {
+                if (studentSection.contains(
+                    section.substring(0, 3).toUpperCase())) {
+                  print("Student has correct section!");
+                  isCorrectSection = !isCorrectSection;
+                } else {
+                  print("Student has incorrect section!");
+                  studentGroup = "";
+                  Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                    content: Text(
+                      "Incorrect Section!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    backgroundColor: Colors.black,
+                  ));
+                  setState(() {
+                    isLoading = !isLoading;
+                  });
+                  break;
+                }
                 if (rowNumber > 12) {
                   print("$name Table ${colNumber + 19}");
                   studentGroup = "Table ${colNumber + 19}";
