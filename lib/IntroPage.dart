@@ -62,7 +62,9 @@ class __IntroPageState extends State<_IntroPage> {
           shrinkWrap: true,
           children: <Widget>[
             GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.05, vertical: deviceHeight * 0.02),
+              padding: EdgeInsets.symmetric(
+                  horizontal: deviceWidth * 0.05,
+                  vertical: deviceHeight * 0.02),
               primary: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount:
@@ -92,14 +94,16 @@ class __IntroPageState extends State<_IntroPage> {
     );
   }
 
-  Widget displayText(
-      List sections, int position, double deviceWidth, Orientation deviceRotation) {
-    return Align(
-      alignment: Alignment.center,
+  Widget displayText(List sections, int position, double deviceWidth,
+      Orientation deviceRotation) {
+    return Center(
       child: Text(
         sections[position],
         style: TextStyle(
-            fontSize: (deviceRotation == Orientation.portrait) ? deviceWidth * 0.4 : deviceWidth * 0.2, color: Colors.white.withAlpha(200)),
+            fontSize: (deviceRotation == Orientation.portrait)
+                ? deviceWidth * 0.4
+                : deviceWidth * 0.2,
+            color: Colors.white.withAlpha(200)),
       ),
     );
   }
