@@ -6,6 +6,7 @@ import 'GroupPage.dart';
 import 'InputPage.dart';
 import 'LineDrawer.dart';
 import 'SectionPage.dart';
+import 'dart:io';
 
 class IntroPage extends StatelessWidget {
   static const routeName = "/IntroPage";
@@ -98,13 +99,19 @@ class __IntroPageState extends State<_IntroPage> {
 
   Widget displayText(List sections, int position, double deviceWidth,
       Orientation deviceRotation) {
-    return Text(
-      sections[position],
-      style: TextStyle(
-          fontSize: (deviceRotation == Orientation.portrait)
-              ? deviceWidth * 0.4
-              : deviceWidth * 0.2,
-          color: Colors.white.withAlpha(200)),
+
+    final double padding = (Platform.isAndroid) ? 0 : 80;
+
+    return Padding(
+      padding: EdgeInsets.only(top: padding),
+      child: Text(
+        sections[position],
+        style: TextStyle(
+            fontSize: (deviceRotation == Orientation.portrait)
+                ? deviceWidth * 0.4
+                : deviceWidth * 0.2,
+            color: Colors.white.withAlpha(200)),
+      ),
     );
   }
 }
