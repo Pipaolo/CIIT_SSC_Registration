@@ -84,13 +84,11 @@ class _SectionPageState extends State<SectionPage> {
   Widget sectionTitle(List sections, int position, BuildContext context) {
     var deviceWidth = MediaQuery.of(context).size.width;
     return Center(
-        child: FittedBox(
-      fit: BoxFit.contain,
       child: Text(
         sections[position],
         style: TextStyle(fontSize: deviceWidth * 0.08, color: Colors.white),
       ),
-    ));
+    );
   }
 
   List generateSectionList(isGrade11) {

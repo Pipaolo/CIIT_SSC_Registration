@@ -79,8 +79,6 @@ class __IntroPageState extends State<_IntroPage> {
                                           : false));
                             },
                             child: Center(
-                              child: FittedBox(
-                                fit: BoxFit.contain,
                                 child: Text(
                                   sections[position],
                                   textAlign: TextAlign.center,
@@ -88,7 +86,6 @@ class __IntroPageState extends State<_IntroPage> {
                                       fontSize: 60,
                                       color: Colors.white.withAlpha(200)),
                                 ),
-                              ),
                             ),
                           ),
                         ),
