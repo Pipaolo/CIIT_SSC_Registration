@@ -83,7 +83,8 @@ class _SectionPageState extends State<SectionPage> {
 
   Widget sectionTitle(List sections, int position, BuildContext context) {
     var deviceWidth = MediaQuery.of(context).size.width;
-    return Center(
+    return Align(
+      alignment: Alignment.center,
       child: Text(
         sections[position],
         style: TextStyle(fontSize: deviceWidth * 0.08, color: Colors.white),

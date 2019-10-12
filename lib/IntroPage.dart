@@ -33,9 +33,8 @@ class _IntroPage extends StatefulWidget {
 class __IntroPageState extends State<_IntroPage> {
   var sections = ["11", "12"];
 
-  @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
+    final deviceRotation = MediaQuery.of(context).orientation;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 2, 51, 76),
       appBar: AppBar(
@@ -45,58 +44,62 @@ class __IntroPageState extends State<_IntroPage> {
       ),
       body: CustomPaint(
         painter: LineDrawer(),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Flexible(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
-                    itemBuilder: (context, position) {
-                      return Center(
-                        child: Card(
-                          color: Colors.blueAccent,
-                          margin: EdgeInsets.only(
-                              top: _width * 0.05,
-                              left: _width * 0.02,
-                              right: _width * 0.02,
-                              bottom: _width * 0.05),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: InkWell(
-                            splashColor: Colors.white,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, SectionPage.routeName,
-                                  arguments: Student(
-                                      "",
-                                      "",
-                                      (sections[position] == "11")
-                                          ? true
-                                          : false));
-                            },
-                            child: Center(
-                                child: Text(
-                                  sections[position],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 60,
-                                      color: Colors.white.withAlpha(200)),
-                                ),
-                            ),
-                          ),
-                        ),
-                      );
+        child: Column(children: <Widget>[
+          generateCards(sections, context, deviceRotation),
+        ]),
+      ),
+    );
+  }
+
+  Widget generateCards(
+      List sections, BuildContext context, Orientation deviceRotation) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+
+    return Expanded(
+      child: ListView(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          shrinkWrap: true,
+          children: <Widget>[
+            GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.05, vertical: deviceHeight * 0.02),
+              primary: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount:
+                      (deviceRotation == Orientation.portrait) ? 1 : 2,
+                  crossAxisSpacing: 20),
+              itemBuilder: (context, position) {
+                return Card(
+                  color: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: InkWell(
+                    splashColor: Colors.white,
+                    onTap: () {
+                      Navigator.pushNamed(context, SectionPage.routeName,
+                          arguments: Student("", "",
+                              (sections[position] == "11") ? true : false));
                     },
-                    itemCount: sections.length,
-                    shrinkWrap: true,
+                    child: displayText(
+                        sections, position, deviceWidth, deviceRotation),
                   ),
-                )
-              ]),
-        ),
+                );
+              },
+              itemCount: sections.length,
+              shrinkWrap: true,
+            ),
+          ]),
+    );
+  }
+
+  Widget displayText(
+      List sections, int position, double deviceWidth, Orientation deviceRotation) {
+    return Align(
+      alignment: Alignment.center,
+      child: Text(
+        sections[position],
+        style: TextStyle(
+            fontSize: (deviceRotation == Orientation.portrait) ? deviceWidth * 0.4 : deviceWidth * 0.2, color: Colors.white.withAlpha(200)),
       ),
     );
   }
