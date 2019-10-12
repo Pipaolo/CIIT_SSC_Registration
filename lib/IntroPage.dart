@@ -82,8 +82,10 @@ class __IntroPageState extends State<_IntroPage> {
                           arguments: Student("", "",
                               (sections[position] == "11") ? true : false));
                     },
-                    child: displayText(
-                        sections, position, deviceWidth, deviceRotation),
+                    child: Center(
+                      child: displayText(
+                          sections, position, deviceWidth, deviceRotation),
+                    ),
                   ),
                 );
               },
@@ -96,16 +98,13 @@ class __IntroPageState extends State<_IntroPage> {
 
   Widget displayText(List sections, int position, double deviceWidth,
       Orientation deviceRotation) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        sections[position],
-        style: TextStyle(
-            fontSize: (deviceRotation == Orientation.portrait)
-                ? deviceWidth * 0.4
-                : deviceWidth * 0.2,
-            color: Colors.white.withAlpha(200)),
-      ),
+    return Text(
+      sections[position],
+      style: TextStyle(
+          fontSize: (deviceRotation == Orientation.portrait)
+              ? deviceWidth * 0.4
+              : deviceWidth * 0.2,
+          color: Colors.white.withAlpha(200)),
     );
   }
 }
