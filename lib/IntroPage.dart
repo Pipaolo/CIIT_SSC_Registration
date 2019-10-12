@@ -96,7 +96,8 @@ class __IntroPageState extends State<_IntroPage> {
 
   Widget displayText(List sections, int position, double deviceWidth,
       Orientation deviceRotation) {
-    return Center(
+    return Container(
+      alignment: Alignment.center,
       child: Text(
         sections[position],
         style: TextStyle(
