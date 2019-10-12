@@ -1,0 +1,32 @@
+os: osx
+language: generic
+before_script:
+- brew update
+- brew install --HEAD usbmuxd
+- brew unlink usbmuxd
+- brew link usbmuxd
+- brew install --HEAD libimobiledevice
+- brew install ideviceinstaller
+- brew install ios-deploy
+- git clone https://github.com/flutter/flutter.git -b beta --depth 1
+script:
+- flutter/bin/flutter build ios --debug --no-codesign
+cache:
+  directories:
+  - "$HOME/.pub-cache"
+before_deploy:
+- pushd build/ios/iphoneos
+- mkdir Payload
+- cd Payload
+- ln -s ../Runner.app
+- cd ..
+- zip -r app.ipa Payload
+- popd
+deploy:
+  provider: releases
+  api_key:
+    secure: mQym8YxUeQs+1zYHVY+Ft6GJgQy3uJKgbHFF/6I8wdjANZsmrQvuRny+ATfwojWedHlms0f4wZYOZQWvg8pgW2v7vllCuobGdGxrWwyWpB51gjUnGwBJ32/WjgR0vqx4rzTuwZyUrvuG7nbLGOl31D5rX9fcRhVswX6CcNOQwhuXz8YVJggm++dEOj/4ckkX9301i/eKii/WM1SYIchq4TcC/ebGajgWLAxBSQooqwRAirUeZHFqBTBcU4EjFJbVsI/ioqmT/nHDE2mB35EST/FHDSewKRWRFEdVYJzYrMz0qIR05LtAc+M7F79d7Oz0OcaneodDcYiSeAaGcPVo7hxYsgwCgniTAkGeizxgHF292+0xJMXLg7e9yQ2TcsNsgJ6YkkvEHTFNJKwB5RS3duOTUXY7N9ISlBmOpVgaQnI6Gus5lJIlnU38dtqwg2txdxsOWXeMA/GKSDU2NZ+8YQzD1qYjUYf6lu412yPueTDKI+wjq74jNj+dXvSjLdI76bnjo75Gf3pH6PTQGTHCa2M1If9soGKpx6kLXMNKlFqbRmKvXq+S2paQTtffqiwVWjdlpWckMajKEL9SZs9xRhz1H2ybzvAdT2QqptH1NwqcjqA2RmyIMpn7CfNQh1plMDKSt5RKS6Y65bG0l8yKJQ3NOXSUJZAeaxnznVC/N7U=
+  file: build/ios/iphoneos/app.ipa
+  skip_cleanup: 
+  on:
+    repo: Pipaolo/CIIT_SSC_Registration
