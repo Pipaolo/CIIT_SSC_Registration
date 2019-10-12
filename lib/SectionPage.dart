@@ -14,14 +14,9 @@ class SectionPage extends StatefulWidget {
 }
 
 class _SectionPageState extends State<SectionPage> {
-
-
   @override
   Widget build(BuildContext context) {
-    final Student _student = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    final Student _student = ModalRoute.of(context).settings.arguments;
     var sections = generateSectionList(_student.isGrade11);
     return MaterialApp(
       routes: {
@@ -35,7 +30,10 @@ class _SectionPageState extends State<SectionPage> {
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 2, 51, 76),
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Theme.of(context).platform == TargetPlatform.iOS ? Icons.arrow_back_ios : Icons.arrow_back),
+          leading: IconButton(
+              icon: Icon(Theme.of(context).platform == TargetPlatform.iOS
+                  ? Icons.arrow_back_ios
+                  : Icons.arrow_back),
               onPressed: () => Navigator.pop(context)),
           title: Text("Choose your Section"),
           centerTitle: true,
@@ -60,25 +58,14 @@ class _SectionPageState extends State<SectionPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           child: InkWell(
-                            splashColor: Colors.white,
-                            onTap: () {
-                              Navigator.pushNamed(context, InputPage.routeName,
-                                  arguments: Student(
-                                      sections[position], "",
-                                      _student.isGrade11
-                                  ));
-                            },
-                            child: Center(
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(
-                                    sections[position],
-                                    style: TextStyle(
-                                        fontSize: 80,
-                                        color: Colors.white),
-                                  ),
-                                )),
-                          ),
+                              splashColor: Colors.white,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, InputPage.routeName,
+                                    arguments: Student(sections[position], "",
+                                        _student.isGrade11));
+                              },
+                              child: sectionTitle(sections, position, context)),
                         ),
                       );
                     },
@@ -94,9 +81,36 @@ class _SectionPageState extends State<SectionPage> {
     );
   }
 
-  List generateSectionList(isGrade11){
-    var grade11Sections = ["Python", "Pattern", "Hue", "Symmetry", "Unity", "Vision"];
-    var grade12Sections = ["Java", "Rhythm", "Harmony", "Balance", "Texture", "Maya", "Max"];
+  Widget sectionTitle(List sections, int position, BuildContext context) {
+    var deviceWidth = MediaQuery.of(context).size.width;
+    return Center(
+        child: FittedBox(
+      fit: BoxFit.contain,
+      child: Text(
+        sections[position],
+        style: TextStyle(fontSize: deviceWidth * 0.08, color: Colors.white),
+      ),
+    ));
+  }
+
+  List generateSectionList(isGrade11) {
+    var grade11Sections = [
+      "Python",
+      "Pattern",
+      "Hue",
+      "Symmetry",
+      "Unity",
+      "Vision"
+    ];
+    var grade12Sections = [
+      "Java",
+      "Rhythm",
+      "Harmony",
+      "Balance",
+      "Texture",
+      "Maya",
+      "Max"
+    ];
 
     return (isGrade11) ? grade11Sections : grade12Sections;
   }
