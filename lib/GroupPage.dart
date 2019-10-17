@@ -44,7 +44,7 @@ class _GroupPageState extends State<GroupPage> {
           textAlign: TextAlign.center);
     } else {
       return Text(
-          "Welcome CIITeen! \nYour Group is ${studentGroup.toUpperCase()}!",
+          "Welcome CIITeen! \nEnjoy!!",
           style: TextStyle(fontSize: 50, color: Colors.white),
           textAlign: TextAlign.center);
     }
