@@ -211,6 +211,14 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
 
   void addUpdateStudentInfo(String spreadsheetId, String name, String section,
       String studentGroup, sheet.SheetsApi api) async {
+        var nameList = name.split(" ");
+        var tempName = "";
+        for(int i = 0; i < nameList.length; i++)
+        {
+          tempName += nameList.elementAt(i)[0].toUpperCase() + " ";
+        }
+        tempName = tempName.trimRight();
+
     if (studentGroup != null) {
       print("Getting Spreadsheet");
       api.spreadsheets.get(spreadsheetId).then((result) {
@@ -228,7 +236,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                 if (item[0] == name) {
                   var vr = sheet.ValueRange.fromJson({
                     "values": [
-                      [name, studentGroup, "${item[2]}", "${getTime()}"]
+                      [tempName, studentGroup, "${item[2]}", "${getTime()}"]
                     ]
                   });
                   print("Found a match!");
