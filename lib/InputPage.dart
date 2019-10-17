@@ -151,8 +151,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               var tempStudentSection = rowItems.toString().split(" ");
               var studentSection =
                   tempStudentSection[tempStudentSection.length - 1];
-              var firstName = tempNameList[0];
-              var lastName = tempNameList[tempNameList.length - 1];
+              var firstName = tempNameList[0].toLowerCase();
+              var lastName = tempNameList[tempNameList.length - 1].toLowerCase();
               if (rowItems.toString().contains(lastName) &&
                   rowItems.toString().contains(firstName)) {
                 if (studentSection
@@ -176,11 +176,11 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   break;
                 }
                 if (rowNumber > 12) {
-                  print("$name Table ${colNumber + 19}");
-                  studentGroup = "Table ${colNumber + 19}";
+                  print("$name Group ${colNumber + 19}");
+                  studentGroup = "Group ${colNumber + 19}";
                 } else {
-                  print("$name Table $colNumber");
-                  studentGroup = "Table $colNumber";
+                  print("$name Group $colNumber");
+                  studentGroup = "Group $colNumber";
                 }
                 isNameFound = !isNameFound;
                 addUpdateStudentInfo(
@@ -287,7 +287,6 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
       });
     }
     animationController.dispose();
-
   }
 
   Widget loadingIcon(String section, bool isGrade11) {
@@ -303,7 +302,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
         if (controller.text.isNotEmpty) {
           isLoading = !isLoading;
           setState(() {});
-          getStudentInfo(controller.text, section, isGrade11);
+          getStudentInfo(controller.text.toLowerCase(), section, isGrade11);
         } else {
           setState(() {
             controller.text.isEmpty ? _validate = true : _validate = false;
