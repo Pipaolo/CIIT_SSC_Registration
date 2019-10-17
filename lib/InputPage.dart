@@ -153,8 +153,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   tempStudentSection[tempStudentSection.length - 1];
               var firstName = tempNameList[0].toLowerCase();
               var lastName = tempNameList[tempNameList.length - 1].toLowerCase();
-              if (rowItems.toString().contains(lastName) &&
-                  rowItems.toString().contains(firstName)) {
+              if (rowItems.toString().toLowerCase().contains(lastName) &&
+                  rowItems.toString().toLowerCase().contains(firstName)) {
                 if (studentSection
                     .contains(section.substring(0, 3).toUpperCase())) {
                   print("Student has correct section!");
@@ -302,7 +302,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
         if (controller.text.isNotEmpty) {
           isLoading = !isLoading;
           setState(() {});
-          getStudentInfo(controller.text.toLowerCase(), section, isGrade11);
+          getStudentInfo(controller.text.toLowerCase(), section   , isGrade11);
         } else {
           setState(() {
             controller.text.isEmpty ? _validate = true : _validate = false;
