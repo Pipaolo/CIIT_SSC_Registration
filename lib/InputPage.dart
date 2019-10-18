@@ -215,7 +215,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
         var tempName = "";
         for(int i = 0; i < nameList.length; i++)
         {
-          tempName += nameList.elementAt(i)[0].toUpperCase() + " ";
+          tempName += nameList.elementAt(i).replaceFirst(nameList.elementAt(i)[0], nameList.elementAt(i)[0].toUpperCase()) + " ";
         }
         tempName = tempName.trimRight();
 
@@ -266,7 +266,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               if (!isMatched) {
                 var vr = sheet.ValueRange.fromJson({
                   "values": [
-                    [name, studentGroup, "${getTime()}"]
+                    [tempName, studentGroup, "${getTime()}"]
                   ]
                 });
                 api.spreadsheets.values
@@ -275,7 +275,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                     .then((sheet.AppendValuesResponse r) {
                   Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
                     content: Text(
-                      "Welcome $name!",
+                      "Welcome $tempName!",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.black),
                     ),
