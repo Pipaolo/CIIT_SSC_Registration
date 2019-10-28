@@ -213,10 +213,12 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
       String studentGroup, sheet.SheetsApi api) async {
         var nameList = name.split(" ");
         var tempName = "";
+
         for(int i = 0; i < nameList.length; i++)
         {
-          tempName += nameList.elementAt(i)[0].toUpperCase() + " ";
+          tempName += nameList.elementAt(i)[0].toUpperCase() + nameList.elementAt(i).substring(1) + " ";
         }
+
         tempName = tempName.trimRight();
 
     if (studentGroup != null) {
@@ -266,7 +268,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               if (!isMatched) {
                 var vr = sheet.ValueRange.fromJson({
                   "values": [
-                    [name, studentGroup, "${getTime()}"]
+                    [tempName, studentGroup, "${getTime()}"]
                   ]
                 });
                 api.spreadsheets.values
@@ -276,7 +278,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
                     content: Text(
                       "Welcome $name!",
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,  
                       style: TextStyle(color: Colors.black),
                     ),
                     backgroundColor: Colors.white,
