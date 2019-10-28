@@ -21,6 +21,7 @@ dependencies:
   googleapis_auth: ^0.2.10
   google_sign_in: any
   flutter_spinkit: ^4.0.0
+  flutter_launcher_icons: ^0.7.3
   flutter:
     sdk: flutter
 
