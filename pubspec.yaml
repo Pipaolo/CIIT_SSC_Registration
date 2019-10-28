@@ -16,6 +16,11 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.2.2 <3.0.0"
 
+flutter_icons:
+  ios: true
+  android: true
+  image_path: "assets/icon/icon.png"
+
 dependencies:
   googleapis: ^0.54.0
   googleapis_auth: ^0.2.10

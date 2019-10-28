@@ -40,7 +40,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   final groupingSpreadsheetId = "1E0B3YRZTezd8wrr8AGU7zBR4-FnbsTzm2SFuMQBkvog";
 
   //UI Stuff
-  final controller = TextEditingController();
+  final nameController = TextEditingController();
+  final serialController = TextEditingController();
   bool isLoading = false;
   bool isMatched = false;
   bool isNameFound = false;
@@ -56,7 +57,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
+    nameController.dispose();
+    serialController.dispose();
   }
 
   @override
@@ -95,7 +97,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                     TextFormField(
                         style: TextStyle(color: Colors.black),
                         cursorColor: Colors.black,
-                        controller: controller,
+                        controller: nameController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius:
@@ -112,6 +114,25 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                             hintStyle:
                                 TextStyle(color: Colors.black.withAlpha(128)),
                             hintText: "Enter Full Name")),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.number,
+                      cursorColor: Colors.black,
+                      controller: serialController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(color: Colors.blue),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white.withAlpha(230),
+                          hintStyle:
+                              TextStyle(color: Colors.black.withAlpha(128)),
+                          hintText: "Enter Serial Code"),
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
@@ -135,6 +156,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
 
     clientViaServiceAccount(accountCredentials, scopes).then((client) {
       sheet.SheetsApi api = new sheet.SheetsApi(client);
+
+      print(serialController.text);
       //Get groupings
       api.spreadsheets.values
           .get(groupingSpreadsheetId, "Sheet1!A:S")
@@ -152,7 +175,8 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               var studentSection =
                   tempStudentSection[tempStudentSection.length - 1];
               var firstName = tempNameList[0].toLowerCase();
-              var lastName = tempNameList[tempNameList.length - 1].toLowerCase();
+              var lastName =
+                  tempNameList[tempNameList.length - 1].toLowerCase();
               if (rowItems.toString().toLowerCase().contains(lastName) &&
                   rowItems.toString().toLowerCase().contains(firstName)) {
                 if (studentSection
@@ -175,6 +199,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   });
                   break;
                 }
+
                 if (rowNumber > 12) {
                   print("$name Group ${colNumber + 19}");
                   studentGroup = "Group ${colNumber + 19}";
@@ -182,9 +207,10 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   print("$name Group $colNumber");
                   studentGroup = "Group $colNumber";
                 }
+
                 isNameFound = !isNameFound;
                 addUpdateStudentInfo(
-                    spreadsheetId, name, section, studentGroup, api);
+                    spreadsheetId, name, section, serialController.text, api);
                 break;
               }
             }
@@ -192,6 +218,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
             break;
           }
         }
+
         if (studentGroup == null) {
           Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
             content: Text(
@@ -210,18 +237,19 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   }
 
   void addUpdateStudentInfo(String spreadsheetId, String name, String section,
-      String studentGroup, sheet.SheetsApi api) async {
-        var nameList = name.split(" ");
-        var tempName = "";
+      String serialCode, sheet.SheetsApi api) async {
+    var nameList = name.split(" ");
+    var tempName = "";
 
-        for(int i = 0; i < nameList.length; i++)
-        {
-          tempName += nameList.elementAt(i)[0].toUpperCase() + nameList.elementAt(i).substring(1) + " ";
-        }
+    for (int i = 0; i < nameList.length; i++) {
+      tempName += nameList.elementAt(i)[0].toUpperCase() +
+          nameList.elementAt(i).substring(1) +
+          " ";
+    }
 
-        tempName = tempName.trimRight();
+    tempName = tempName.trimRight();
 
-    if (studentGroup != null) {
+    if (serialCode != null) {
       print("Getting Spreadsheet");
       api.spreadsheets.get(spreadsheetId).then((result) {
         print("Spreadsheet Get Successful!");
@@ -235,10 +263,26 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               var row = result;
               for (var item in row.values) {
                 i++;
-                if (item[0] == name) {
+                if (item[0] == tempName) {
+                  if(item[1] != serialController.text){
+                                      Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                    content: Text(
+                      "Serial Code Incorrect",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ));
+                  setState(() {
+                    isMatched = !isMatched;
+                    isLoading = !isLoading;
+                    nameController.text = "";
+                    serialController.text = "";
+                  });
+                  break;
+                  }
                   var vr = sheet.ValueRange.fromJson({
                     "values": [
-                      [tempName, studentGroup, "${item[2]}", "${getTime()}"]
+                      [tempName, serialCode, "${item[2]}", "${getTime()}"]
                     ]
                   });
                   print("Found a match!");
@@ -251,7 +295,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                       content: Text(
                         "Time Out Success!",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.white),
                       ),
                       backgroundColor: Colors.white,
                     ));
@@ -268,7 +312,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
               if (!isMatched) {
                 var vr = sheet.ValueRange.fromJson({
                   "values": [
-                    [tempName, studentGroup, "${getTime()}"]
+                    [tempName, serialCode, "${getTime()}"]
                   ]
                 });
                 api.spreadsheets.values
@@ -278,7 +322,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
                     content: Text(
                       "Welcome $name!",
-                      textAlign: TextAlign.center,  
+                      textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.black),
                     ),
                     backgroundColor: Colors.white,
@@ -288,7 +332,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
                   });
                   print("Time In Success!");
                   Navigator.pushNamed(context, GroupPage.routeName,
-                      arguments: Student("", studentGroup, false));
+                      arguments: Student("", serialCode, false));
                 });
               }
             });
@@ -309,13 +353,13 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       color: Colors.amber.withAlpha(255),
       onPressed: () {
-        if (controller.text.isNotEmpty) {
+        if (nameController.text.isNotEmpty) {
           isLoading = !isLoading;
           setState(() {});
-          getStudentInfo(controller.text.toLowerCase(), section   , isGrade11);
+          getStudentInfo(nameController.text.toLowerCase(), section, isGrade11);
         } else {
           setState(() {
-            controller.text.isEmpty ? _validate = true : _validate = false;
+            nameController.text.isEmpty ? _validate = true : _validate = false;
           });
         }
       },
